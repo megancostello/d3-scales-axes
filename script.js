@@ -82,8 +82,6 @@ async function scatter(){
                 "Population: " +d3.format(",")(d.Population)+"<br>" +
                 "Income: " + d3.format(",")(d.Income)+ "<br>" +
                 "Life Expectancy: " + d.LifeExpectancy + "</p>"
-                
-                
             );
     })
     .on("mouseleave", (event, d) => {
