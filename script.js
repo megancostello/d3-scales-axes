@@ -22,6 +22,7 @@ async function scatter(){
 
     let incomeRange = d3.extent(wealthHealth, d=>d.Income);
     let lifeRange = d3.extent(wealthHealth, d=>d.LifeExpectancy);
+    let popRange = d3.extent(wealthHealth, d=>d.Population);
     
     const xScale = d3.scaleLinear()
         .domain([incomeRange[0],incomeRange[1]])
@@ -33,6 +34,12 @@ async function scatter(){
 
     console.log(xScale(incomeRange[1])); // returns the chart width
 
+    const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+
+    const popScale = d3.scaleLinear()
+        .domain([popRange[0],popRange[1]])
+        .range([5,30]);
+
     svg.selectAll("circle")
     .data(wealthHealth)
     .enter()
@@ -43,9 +50,12 @@ async function scatter(){
     .attr("cx", (d,i)=>{
       return xScale(d.Income);
     })
-    .attr("r", 5)
-    //.attr("fill", d=>colorScale(d.Income))
+    .attr("r", (d,i)=>{
+        return popScale(d.Population);
+      })
+    .attr("fill", d=>colorScale(d.Region))
     .attr("stroke", "black")
+    .style("opacity", "65%")
     .on("mouseenter", (event, d) => {
         // show the tooltip
         const pos = d3.pointer(event, window);
@@ -55,20 +65,23 @@ async function scatter(){
             .style("top", pos[1]+"px")
             .style("left", pos[0]+"px")
             .attr("position", "fixed")
+            .style("padding", "5px")
             .html(
                 // format your tooltip
                 "<p>"+
                 "Country: " + d.Country + "<br>" +
-                "Income: " + d.Income+ "<br>" +
-                "Life Expectancy: " + d.LifeExpectancy+"<br>" +
-                "Population: " +d.Population+"<br>" +
-                "Region: " + d.Region + "</p>"
+                "Region: " + d.Region  + "<br>" +
+                "Population: " +d3.format(",")(d.Population)+"<br>" +
+                "Income: " + d3.format(",")(d.Income)+ "<br>" +
+                "Life Expectancy: " + d.LifeExpectancy+"<br>" + "</p>"
+                
+                
             );
     })
     .on("mouseleave", (event, d) => {
         // hide the tooltip
         d3.selectAll(".tooltip")
-            .style("display","hide");
+            .style("display","none");
     });
 
     const xAxis = d3.axisBottom()
@@ -100,6 +113,43 @@ async function scatter(){
 		.text("Life Expectancy")
         .attr("transform", `translate(40,0)rotate(90)`);
 
+    let legend = svg.append("g").attr("id", "legend");
+
+    legend.selectAll("rect")
+        .data(colorScale.domain())
+        .enter()
+        .append("rect")
+        .attr('x', 400)
+        .attr('y', (d,i)=>{
+            return 300+i*20;
+          })
+        .attr("fill", d=>colorScale(d))
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("stroke", "black")
+        .style("opacity", "65%");
+        
+    legend.selectAll("#legend")
+        .data(colorScale.domain())
+        .enter()
+        .append("text")
+        .attr('x', 420)
+		.attr('y', (d,i)=>{
+            return 310+i*20;
+          })
+		.text((d,i)=>{
+            return d;
+          })
+        .style("font-size", "15px");
+    
+    // svg.append("text")
+	// 	.attr('x', 500)
+	// 	.attr('y', (d,i)=>{
+    //         return 300+i*20;
+    //       })
+	// 	.text((d,i)=>{
+    //         return d.Region;
+    //       });
     
         
 }

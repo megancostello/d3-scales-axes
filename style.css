@@ -15,5 +15,9 @@
     position:fixed;
     display:none;
     background:black;
-    opacity: 75%;
+    opacity: 85%;
   }
+
+h1 {
+    padding: 10px;
+}
