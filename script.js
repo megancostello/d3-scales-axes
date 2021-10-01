@@ -81,7 +81,7 @@ async function scatter(){
                 "Region: " + d.Region  + "<br>" +
                 "Population: " +d3.format(",")(d.Population)+"<br>" +
                 "Income: " + d3.format(",")(d.Income)+ "<br>" +
-                "Life Expectancy: " + d.LifeExpectancy+"<br>" + "</p>"
+                "Life Expectancy: " + d.LifeExpectancy + "</p>"
                 
                 
             );
