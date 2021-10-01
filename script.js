@@ -4,10 +4,10 @@ async function scatter(){
 
     await d3.csv('wealth-health-2014.csv', d3.autoType).then(data=>{
         wealthHealth = data;
-        console.log('wealth health 2014 data', wealthHealth);
+        //console.log('wealth health 2014 data', wealthHealth);
         
     })
-    console.log('data print 2 ', wealthHealth);
+    //console.log('data print 2 ', wealthHealth);
 
     const margin = {top:20, left:50, right:20, bottom:20};
   
@@ -32,7 +32,7 @@ async function scatter(){
         .domain([lifeRange[0],lifeRange[1]])
         .range([height,0]);
 
-    console.log(xScale(incomeRange[1])); // returns the chart width
+    //console.log(xScale(incomeRange[1])); // returns the chart width
 
     const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
 
@@ -59,10 +59,18 @@ async function scatter(){
     .on("mouseenter", (event, d) => {
         // show the tooltip
         const pos = d3.pointer(event, window);
-        console.log('position ',pos);
+        //console.log('position ',pos);
         d3.selectAll(".tooltip")
             .style("display", "block")
-            .style("top", pos[1]+"px")
+            .style("top", ()=>{
+                if (pos[1] > 500) {
+                    return (pos[1]-200)+"px";
+                } 
+                else {
+                    return pos[1]+"px";
+                }
+                    
+              })
             .style("left", pos[0]+"px")
             .attr("position", "fixed")
             .style("padding", "5px")
